@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # 指定数据库驱动类
+    # 数据库连接信息
+    url: jdbc:mysql://192.168.0.106:3306/xiaohashu-prod?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root # 数据库用户名
+    password: ${DATABASE_PASSWORD} # 数据库密码
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid: # Druid 连接池
+      initial-size: 5 # 初始化连接池大小
+      min-idle: 5 # 最小连接池数量
+      max-active: 20 # 最大连接池数量
+      max-wait: 60000 # 连接时最大等待时间（单位：毫秒）
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000 # 配置多久进行一次检测，检测需要关闭的连接（单位：毫秒）
+      min-evictable-idle-time-millis: 300000 # 配置一个连接在连接池中最小生存的时间（单位：毫秒）
+      max-evictable-idle-time-millis: 900000 # 配置一个连接在连接池中最大生存的时间（单位：毫秒）
+      validation-query: SELECT 1 FROM DUAL # 配置测试连接是否可用的查询 sql
+      connectionProperties: config.decrypt=true;config.decrypt.key=${DRUID_CONFIG_DECRYPT_KEY}
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: false
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/* # 配置监控后台访问路径
+        login-username: admin # 配置监控后台登录的用户名、密码
+        login-password: ${NACOS_PASSWORD}
+      filter:
+        config:
+          enabled: true
+        stat:
+          enabled: true
+          log-slow-sql: true # 开启慢 sql 记录
+          slow-sql-millis: 2000 # 若执行耗时大于 2s，则视为慢 sql
+          merge-sql: true
+        wall: # 防火墙
+          config:
+            multi-statement-allow: true
+
+logging:
+  level:
+    com.quanxiaoha.xiaohashu.search.biz.domain.mapper: debug
+
+elasticsearch:
+  address: 192.168.0.106:9200 # Elasticsearch 地址
+  hotUpdateExtDict: E:\docker\elasticsearch\config\analysis-ik\custom\mydict_hot_update.dic
+
+canal: # Canal 配置
+  address: 192.168.0.106:11111 # 链接地址
+  destination: example # 数据目标
+  username: canal # 数据库用户名
+  password: ${CANAL_PASSWORD} # 数据库密码
+  subscribe: xiaohashu-prod.t_note,xiaohashu-prod.t_user # 订阅规则，只订阅笔记表和用户表
+  batchSize: 1000 # 一批次拉取数据量

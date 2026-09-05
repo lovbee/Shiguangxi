@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.note.biz.domain.mapper.NoteLikeDOMapper">
+  <resultMap id="BaseResultMap" type="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="note_id" jdbcType="BIGINT" property="noteId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, note_id, create_time, `status`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_note_like
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectCountByUserIdAndNoteId" resultType="int" parameterType="map">
+    select count(1) from t_note_like where user_id = #{userId} and note_id = #{noteId} and status = 1 limit 1
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="map">
+    select note_id from t_note_like
+    where user_id = #{userId} and status = 1
+  </select>
+
+  <select id="selectNoteIsLiked" parameterType="map" resultType="int">
+    select count(1) from t_note_like where user_id = #{userId} and note_id = #{noteId} and status = 1 limit 1
+  </select>
+
+  <select id="selectLikedByUserIdAndLimit" resultMap="BaseResultMap" parameterType="map">
+    select note_id, create_time from t_note_like
+    where user_id = #{userId} and status = 1 order by create_time desc limit #{limit}
+  </select>
+
+  <select id="selectTotalCountByUserId" resultType="int">
+    select count(*) from t_note_like
+    where user_id = #{userId} and status = 1
+  </select>
+
+  <select id="selectPageListByUserId" resultType="long">
+    select note_id from t_note_like
+    where user_id = #{userId} and status = 1
+    order by create_time desc
+    limit #{offset}, #{pageSize}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_note_like
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    insert into t_note_like (id, user_id, note_id, 
+      create_time, `status`)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{noteId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT})
+  </insert>
+
+  <insert id="insertOrUpdate" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    INSERT INTO t_note_like (user_id, note_id, create_time, status)
+    VALUES (#{userId}, #{noteId}, #{createTime}, #{status})
+      ON DUPLICATE KEY UPDATE
+          create_time = #{createTime}, status = #{status};
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    insert into t_note_like
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="noteId != null">
+        note_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="noteId != null">
+        #{noteId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    update t_note_like
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="noteId != null">
+        note_id = #{noteId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    update t_note_like
+    set user_id = #{userId,jdbcType=BIGINT},
+      note_id = #{noteId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="update2UnlikeByUserIdAndNoteId" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteLikeDO">
+    update t_note_like set status = #{status}, create_time = #{createTime}
+    where user_id = #{userId} and note_id = #{noteId} and status = 1
+  </update>
+</mapper>

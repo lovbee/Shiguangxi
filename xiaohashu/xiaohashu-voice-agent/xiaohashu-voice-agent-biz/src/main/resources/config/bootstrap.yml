@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: xiaohashu-voice-agent
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        group: DEFAULT_GROUP
+        namespace: xiaohashu
+        server-addr: ${NACOS_SERVER_ADDR:192.168.0.106:8848}

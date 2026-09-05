@@ -1,0 +1,6 @@
+server:
+  port: 8084 # 项目启动的端口
+
+spring:
+  profiles:
+    active: dev # 默认激活 dev 本地开发环境

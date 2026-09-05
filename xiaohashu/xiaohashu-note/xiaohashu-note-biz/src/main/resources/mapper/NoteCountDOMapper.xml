@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.note.biz.domain.mapper.NoteCountDOMapper">
+  <resultMap id="BaseResultMap" type="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteCountDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="note_id" jdbcType="BIGINT" property="noteId" />
+    <result column="like_total" jdbcType="BIGINT" property="likeTotal" />
+    <result column="collect_total" jdbcType="BIGINT" property="collectTotal" />
+    <result column="comment_total" jdbcType="BIGINT" property="commentTotal" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, note_id, like_total, collect_total, comment_total
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_note_count
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByNoteIds" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from t_note_count
+    where note_id in 
+    <foreach collection="noteIds" item="noteId" open="(" separator="," close=")">
+      #{noteId}
+    </foreach>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_note_count
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteCountDO">
+    insert into t_note_count (id, note_id, like_total, 
+      collect_total, comment_total)
+    values (#{id,jdbcType=BIGINT}, #{noteId,jdbcType=BIGINT}, #{likeTotal,jdbcType=BIGINT}, 
+      #{collectTotal,jdbcType=BIGINT}, #{commentTotal,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteCountDO">
+    insert into t_note_count
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="noteId != null">
+        note_id,
+      </if>
+      <if test="likeTotal != null">
+        like_total,
+      </if>
+      <if test="collectTotal != null">
+        collect_total,
+      </if>
+      <if test="commentTotal != null">
+        comment_total,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="noteId != null">
+        #{noteId,jdbcType=BIGINT},
+      </if>
+      <if test="likeTotal != null">
+        #{likeTotal,jdbcType=BIGINT},
+      </if>
+      <if test="collectTotal != null">
+        #{collectTotal,jdbcType=BIGINT},
+      </if>
+      <if test="commentTotal != null">
+        #{commentTotal,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteCountDO">
+    update t_note_count
+    <set>
+      <if test="noteId != null">
+        note_id = #{noteId,jdbcType=BIGINT},
+      </if>
+      <if test="likeTotal != null">
+        like_total = #{likeTotal,jdbcType=BIGINT},
+      </if>
+      <if test="collectTotal != null">
+        collect_total = #{collectTotal,jdbcType=BIGINT},
+      </if>
+      <if test="commentTotal != null">
+        comment_total = #{commentTotal,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteCountDO">
+    update t_note_count
+    set note_id = #{noteId,jdbcType=BIGINT},
+      like_total = #{likeTotal,jdbcType=BIGINT},
+      collect_total = #{collectTotal,jdbcType=BIGINT},
+      comment_total = #{commentTotal,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

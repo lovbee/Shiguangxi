@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="mysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.0.106:3306/xiaohashu-prod?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai"
+                        userId="root"
+                        password="${DATABASE_PASSWORD}">
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <!-- 不强制将所有的数值类型映射为 Java 的 BigDecimal 类型 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- DO 实体类存放路径 -->
+        <javaModelGenerator targetPackage="com.quanxiaoha.xiaohashu.comment.biz.domain.dataobject"
+                            targetProject="src/main/java"/>
+
+        <!-- Mapper xml 文件存放路径-->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources"/>
+
+        <!-- Mapper 接口存放路径 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.quanxiaoha.xiaohashu.comment.biz.domain.mapper"
+                             targetProject="src/main/java"/>
+
+        <!-- 需要生成的表-实体类 -->
+        <table tableName="t_note_count" domainObjectName="NoteCountDO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+    </context>
+</generatorConfiguration>

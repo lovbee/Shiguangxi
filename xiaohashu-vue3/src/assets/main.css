@@ -1,0 +1,9 @@
+@import './base.css';
+
+:root {
+    --color-primary-label: #333;
+    --color-secondary-label: rgba(51, 51, 51, 0.8);
+    --color-tertiary-label: rgba(51, 51, 51, 0.6);
+    --color-active-background: rgba(0, 0, 0, 0.03);
+    --color-border: rgba(0, 0, 0, 0.08);
+}

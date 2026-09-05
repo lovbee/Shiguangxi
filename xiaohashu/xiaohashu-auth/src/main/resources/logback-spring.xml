@@ -1,0 +1,58 @@
+<configuration>
+    <!-- 引用 Spring Boot 的 logback 基础配置 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <!-- 应用名称 -->
+    <property scope="context" name="appName" value="auth"/>
+    <!-- 自定义日志输出路径，以及日志名称前缀 -->
+    <property name="LOG_FILE" value="./logs/${appName}.%d{yyyy-MM-dd}"/>
+    <!-- 每行日志输出的格式 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+
+    <!-- 文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 日志文件的命名格式 -->
+            <fileNamePattern>${LOG_FILE}-%i.log</fileNamePattern>
+            <!-- 保留 30 天的日志文件 -->
+            <maxHistory>30</maxHistory>
+            <!-- 单个日志文件最大大小 -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- 日志文件的总大小，0 表示不限制 -->
+            <totalSizeCap>0</totalSizeCap>
+            <!-- 重启服务时，是否清除历史日志，不推荐清理 -->
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 异步写入日志，提升性能 -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 是否丢弃日志, 0 表示不丢弃。默认情况下，如果队列满 80%, 会丢弃 TRACE、DEBUG、INFO 级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 队列大小。默认值为 256 -->
+        <queueSize>256</queueSize>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <!-- 本地 dev 开发环境 -->
+    <springProfile name="dev">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/> <!-- 输出控制台日志 -->
+            <appender-ref ref="ASYNC_FILE"/> <!-- 打印日志到文件中。PS: 本地环境下，如果不想打印日志到文件，可注释掉此行 -->
+        </root>
+    </springProfile>
+
+    <!-- 其它环境 -->
+    <springProfile name="prod">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+        <root level="INFO">
+            <appender-ref ref="ASYNC_FILE"/> <!-- 生产环境下，仅打印日志到文件中 -->
+        </root>
+    </springProfile>
+
+</configuration>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.user.relation.biz.domain.mapper.FansDOMapper">
+  <resultMap id="BaseResultMap" type="com.quanxiaoha.xiaohashu.user.relation.biz.domain.dataobject.FansDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="fans_user_id" jdbcType="BIGINT" property="fansUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, fans_user_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_fans
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectCountByUserId" resultType="long" parameterType="long">
+    select count(1) from t_fans where user_id = #{userId}
+  </select>
+
+  <select id="selectPageListByUserId" resultMap="BaseResultMap" parameterType="map">
+    select fans_user_id from t_fans
+    where user_id = #{userId} order by create_time desc limit #{offset}, #{limit}
+  </select>
+
+  <select id="select5000FansByUserId" resultMap="BaseResultMap">
+    select fans_user_id, create_time from t_fans
+    where user_id = #{userId} order by create_time desc limit 5000
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_fans
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteByUserIdAndFansUserId" parameterType="map">
+    delete from t_fans
+    where user_id = #{userId}
+      and fans_user_id = #{fansUserId}
+  </delete>
+
+  <insert id="insert" parameterType="com.quanxiaoha.xiaohashu.user.relation.biz.domain.dataobject.FansDO">
+    insert into t_fans (id, user_id, fans_user_id, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{fansUserId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.quanxiaoha.xiaohashu.user.relation.biz.domain.dataobject.FansDO">
+    insert into t_fans
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="fansUserId != null">
+        fans_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="fansUserId != null">
+        #{fansUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.quanxiaoha.xiaohashu.user.relation.biz.domain.dataobject.FansDO">
+    update t_fans
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="fansUserId != null">
+        fans_user_id = #{fansUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quanxiaoha.xiaohashu.user.relation.biz.domain.dataobject.FansDO">
+    update t_fans
+    set user_id = #{userId,jdbcType=BIGINT},
+      fans_user_id = #{fansUserId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

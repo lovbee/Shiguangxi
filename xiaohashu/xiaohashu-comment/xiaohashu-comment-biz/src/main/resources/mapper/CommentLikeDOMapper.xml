@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.comment.biz.domain.mapper.CommentLikeDOMapper">
+  <resultMap id="BaseResultMap" type="com.quanxiaoha.xiaohashu.comment.biz.domain.dataobject.CommentLikeDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="comment_id" jdbcType="BIGINT" property="commentId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, comment_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_comment_like
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectCountByUserIdAndCommentId" resultType="int" parameterType="map">
+    select count(1) from t_comment_like
+    where user_id = #{userId} and comment_id = #{commentId} limit 1
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="map">
+    select comment_id from t_comment_like
+    where user_id = #{userId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_comment_like
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="batchDelete" parameterType="map">
+    DELETE FROM t_comment_like
+    WHERE (comment_id, user_id) IN
+    <foreach collection="unlikes" item="unlike" open="(" separator="," close=")">
+      (#{unlike.commentId}, #{unlike.userId})
+    </foreach>
+  </delete>
+
+  <insert id="batchInsert" parameterType="list">
+    INSERT INTO t_comment_like (comment_id, user_id, create_time)
+    VALUES
+    <foreach collection="likes" item="like" separator=",">
+      (#{like.commentId}, #{like.userId}, #{like.createTime})
+    </foreach>
+    ON DUPLICATE KEY UPDATE id=id
+  </insert>
+
+  <insert id="insert" parameterType="com.quanxiaoha.xiaohashu.comment.biz.domain.dataobject.CommentLikeDO">
+    insert into t_comment_like (id, user_id, comment_id, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.quanxiaoha.xiaohashu.comment.biz.domain.dataobject.CommentLikeDO">
+    insert into t_comment_like
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="commentId != null">
+        comment_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="commentId != null">
+        #{commentId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.quanxiaoha.xiaohashu.comment.biz.domain.dataobject.CommentLikeDO">
+    update t_comment_like
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="commentId != null">
+        comment_id = #{commentId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quanxiaoha.xiaohashu.comment.biz.domain.dataobject.CommentLikeDO">
+    update t_comment_like
+    set user_id = #{userId,jdbcType=BIGINT},
+      comment_id = #{commentId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,21 @@
+跑鞋:
+  required: [category, scenario, budget]
+  nice_to_have: [brand, gender]
+  scenario_options: ["塑胶跑道", "水泥路", "越野", "健身房", "不固定"]
+
+T恤:
+  required: [category, gender, budget]
+  nice_to_have: [brand, scenario]
+  scenario_options: ["日常", "运动", "商务休闲"]
+
+手表:
+  required: [category, budget]
+  nice_to_have: [brand, scenario, gender]
+
+口红:
+  required: [category, budget]
+  nice_to_have: [brand, skin_type]
+
+default:
+  required: [category, budget]
+  nice_to_have: [brand]

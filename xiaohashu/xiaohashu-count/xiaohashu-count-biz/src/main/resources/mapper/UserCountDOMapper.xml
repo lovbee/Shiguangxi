@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.count.biz.domain.mapper.UserCountDOMapper">
+  <resultMap id="BaseResultMap" type="com.quanxiaoha.xiaohashu.count.biz.domain.dataobject.UserCountDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="fans_total" jdbcType="BIGINT" property="fansTotal" />
+    <result column="following_total" jdbcType="BIGINT" property="followingTotal" />
+    <result column="note_total" jdbcType="BIGINT" property="noteTotal" />
+    <result column="like_total" jdbcType="BIGINT" property="likeTotal" />
+    <result column="collect_total" jdbcType="BIGINT" property="collectTotal" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, fans_total, following_total, note_total, like_total, collect_total
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_count
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_count
+    where user_id = #{userId} limit 1
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_user_count
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.quanxiaoha.xiaohashu.count.biz.domain.dataobject.UserCountDO">
+    insert into t_user_count (id, user_id, fans_total, 
+      following_total, note_total, like_total, 
+      collect_total)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{fansTotal,jdbcType=BIGINT}, 
+      #{followingTotal,jdbcType=BIGINT}, #{noteTotal,jdbcType=BIGINT}, #{likeTotal,jdbcType=BIGINT}, 
+      #{collectTotal,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.quanxiaoha.xiaohashu.count.biz.domain.dataobject.UserCountDO">
+    insert into t_user_count
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="fansTotal != null">
+        fans_total,
+      </if>
+      <if test="followingTotal != null">
+        following_total,
+      </if>
+      <if test="noteTotal != null">
+        note_total,
+      </if>
+      <if test="likeTotal != null">
+        like_total,
+      </if>
+      <if test="collectTotal != null">
+        collect_total,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="fansTotal != null">
+        #{fansTotal,jdbcType=BIGINT},
+      </if>
+      <if test="followingTotal != null">
+        #{followingTotal,jdbcType=BIGINT},
+      </if>
+      <if test="noteTotal != null">
+        #{noteTotal,jdbcType=BIGINT},
+      </if>
+      <if test="likeTotal != null">
+        #{likeTotal,jdbcType=BIGINT},
+      </if>
+      <if test="collectTotal != null">
+        #{collectTotal,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="insertOrUpdateFansTotalByUserId" parameterType="map">
+    INSERT INTO t_user_count (user_id, fans_total)
+    VALUES (#{userId}, #{count})
+      ON DUPLICATE KEY UPDATE fans_total = fans_total + (#{count});
+  </insert>
+
+  <insert id="insertOrUpdateLikeTotalByUserId" parameterType="map">
+    INSERT INTO t_user_count (user_id, like_total)
+    VALUES (#{userId}, #{count})
+      ON DUPLICATE KEY UPDATE like_total = like_total + (#{count});
+  </insert>
+
+  <insert id="insertOrUpdateNoteTotalByUserId" parameterType="map">
+    INSERT INTO t_user_count (user_id, note_total)
+    VALUES (#{userId}, #{count})
+      ON DUPLICATE KEY UPDATE note_total = note_total + (#{count});
+  </insert>
+
+  <insert id="insertOrUpdateCollectTotalByUserId" parameterType="map">
+    INSERT INTO t_user_count (user_id, collect_total)
+    VALUES (#{userId}, #{count})
+      ON DUPLICATE KEY UPDATE collect_total = collect_total + (#{count});
+  </insert>
+
+  <insert id="insertOrUpdateFollowingTotalByUserId" parameterType="map">
+    INSERT INTO t_user_count (user_id, following_total)
+    VALUES (#{userId}, #{count})
+      ON DUPLICATE KEY UPDATE following_total = following_total + (#{count});
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.quanxiaoha.xiaohashu.count.biz.domain.dataobject.UserCountDO">
+    update t_user_count
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="fansTotal != null">
+        fans_total = #{fansTotal,jdbcType=BIGINT},
+      </if>
+      <if test="followingTotal != null">
+        following_total = #{followingTotal,jdbcType=BIGINT},
+      </if>
+      <if test="noteTotal != null">
+        note_total = #{noteTotal,jdbcType=BIGINT},
+      </if>
+      <if test="likeTotal != null">
+        like_total = #{likeTotal,jdbcType=BIGINT},
+      </if>
+      <if test="collectTotal != null">
+        collect_total = #{collectTotal,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quanxiaoha.xiaohashu.count.biz.domain.dataobject.UserCountDO">
+    update t_user_count
+    set user_id = #{userId,jdbcType=BIGINT},
+      fans_total = #{fansTotal,jdbcType=BIGINT},
+      following_total = #{followingTotal,jdbcType=BIGINT},
+      note_total = #{noteTotal,jdbcType=BIGINT},
+      like_total = #{likeTotal,jdbcType=BIGINT},
+      collect_total = #{collectTotal,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

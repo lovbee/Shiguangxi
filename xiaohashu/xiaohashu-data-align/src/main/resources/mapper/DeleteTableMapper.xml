@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.data.align.domain.mapper.DeleteTableMapper">
+
+  <delete id="deleteDataAlignFollowingCountTempTable" parameterType="map">
+      DROP TABLE IF EXISTS `t_data_align_following_count_temp_${tableNameSuffix}`;
+  </delete>
+
+    <delete id="deleteDataAlignFansCountTempTable" parameterType="map">
+        DROP TABLE IF EXISTS `t_data_align_fans_count_temp_${tableNameSuffix}`;
+    </delete>
+
+    <delete id="deleteDataAlignNoteCollectCountTempTable" parameterType="map">
+        DROP TABLE IF EXISTS `t_data_align_note_collect_count_temp_${tableNameSuffix}`;
+    </delete>
+
+    <delete id="deleteDataAlignUserCollectCountTempTable" parameterType="map">
+        DROP TABLE IF EXISTS `t_data_align_user_collect_count_temp_${tableNameSuffix}`;
+    </delete>
+
+    <delete id="deleteDataAlignUserLikeCountTempTable" parameterType="map">
+        DROP TABLE IF EXISTS `t_data_align_user_like_count_temp_${tableNameSuffix}`;
+    </delete>
+
+    <delete id="deleteDataAlignNoteLikeCountTempTable" parameterType="map">
+        DROP TABLE IF EXISTS `t_data_align_note_like_count_temp_${tableNameSuffix}`;
+    </delete>
+
+    <delete id="deleteDataAlignNotePublishCountTempTable" parameterType="map">
+        DROP TABLE IF EXISTS `t_data_align_note_publish_count_temp_${tableNameSuffix}`;
+    </delete>
+</mapper>

@@ -1,0 +1,16 @@
+server:
+  port: 8094
+
+spring:
+  profiles:
+    active: dev
+  cloud:
+    openfeign:
+      client:
+        config:
+          voiceSaleAgent:
+            connectTimeout: 3000
+            readTimeout: 30000
+
+voice-sale-agent:
+  base-url: ${VOICE_SALE_AGENT_URL:http://voice-sale-agent:8010}

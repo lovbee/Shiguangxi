@@ -1,0 +1,12 @@
+spring:
+  cassandra:
+    keyspace-name: xiaohashu
+    contact-points: 192.168.0.106
+    port: 9042
+#    schema-action: none
+
+
+
+
+
+

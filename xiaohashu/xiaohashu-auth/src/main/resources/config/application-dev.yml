@@ -1,0 +1,22 @@
+spring:
+  data:
+    redis:
+      database: 0 # Redis 数据库索引（默认为 0）
+      host: 192.168.0.106 # Redis 服务器地址
+      port: 6379 # Redis 服务器连接端口
+      password: ${REDIS_PASSWORD} # Redis 服务器连接密码（默认为空）
+      timeout: 5s # 读超时时间
+      connect-timeout: 5s # 链接超时时间
+      lettuce:
+        pool:
+          max-active: 200 # 连接池最大连接数
+          max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          min-idle: 0 # 连接池中的最小空闲连接
+          max-idle: 10 # 连接池中的最大空闲连接
+
+aliyun: # 接入阿里云（发送短信使用）
+  accessKeyId: ${ALIYUN_ACCESS_KEY_ID} # 改成你自己的
+  accessKeySecret: ${ALIYUN_ACCESS_KEY_SECRET} # 改成你自己的
+
+
+

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quanxiaoha.xiaohashu.note.biz.domain.mapper.NoteDOMapper">
+  <resultMap id="BaseResultMap" type="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="is_content_empty" jdbcType="BIT" property="isContentEmpty" />
+    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
+    <result column="topic_id" jdbcType="BIGINT" property="topicId" />
+    <result column="topic_name" jdbcType="VARCHAR" property="topicName" />
+    <result column="is_top" jdbcType="BIT" property="isTop" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="img_uris" jdbcType="VARCHAR" property="imgUris" />
+    <result column="video_uri" jdbcType="VARCHAR" property="videoUri" />
+    <result column="visible" jdbcType="TINYINT" property="visible" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="content_uuid" jdbcType="VARCHAR" property="contentUuid" />
+    <result column="channel_id" jdbcType="BIGINT" property="channelId" />
+    <result column="topic_ids" jdbcType="VARCHAR" property="topicIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, is_content_empty, creator_id, topic_id, topic_name, is_top, `type`, img_uris, 
+    video_uri, visible, create_time, update_time, `status`, content_uuid, channel_id, topic_ids
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_note
+    where id = #{id,jdbcType=BIGINT} and status = 1
+  </select>
+
+  <select id="selectCountByNoteId" resultType="int">
+    select count(1) from t_note where id = #{noteId} and status = 1
+  </select>
+
+  <select id="selectCreatorIdByNoteId" resultType="long">
+    select creator_id from t_note where id = #{noteId} and status = 1
+  </select>
+
+  <select id="selectTotalCount" resultType="int">
+    select count(*) from t_note where visible = 0 and status = 1
+    <if test="channelId != null and channelId != 0">
+      and channel_id = #{channelId}
+    </if>
+    order by create_time desc
+  </select>
+
+  <select id="selectTotalCountByCreatorId" resultType="int">
+    select count(*) from t_note
+    where visible = 0 and status = 1 and creator_id = #{creatorId}
+    order by create_time desc
+  </select>
+
+  <select id="selectPageList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_note where visible = 0 and status = 1
+    <if test="channelId != null and channelId != 0">
+      and channel_id = #{channelId}
+    </if>
+    order by create_time desc
+    limit #{offset}, #{pageSize}
+  </select>
+
+  <select id="selectPageListByCreatorId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_note where visible = 0 and status = 1
+    and creator_id = #{creatorId}
+    order by create_time desc
+    limit #{offset}, #{pageSize}
+  </select>
+
+  <select id="selectByNoteIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_note
+    where id in
+    <foreach collection="noteIds" item="noteId" open="(" separator="," close=")">
+      #{noteId}
+    </foreach>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_note
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    insert into t_note (id, title, is_content_empty, 
+      creator_id, topic_id, topic_name, 
+      is_top, `type`, img_uris, video_uri, 
+      visible, create_time, update_time, 
+      `status`, content_uuid, channel_id, topic_ids)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{isContentEmpty,jdbcType=BIT}, 
+      #{creatorId,jdbcType=BIGINT}, #{topicId,jdbcType=BIGINT}, #{topicName,jdbcType=VARCHAR}, 
+      #{isTop,jdbcType=BIT}, #{type,jdbcType=TINYINT}, #{imgUris,jdbcType=VARCHAR}, #{videoUri,jdbcType=VARCHAR}, 
+      #{visible,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{contentUuid,jdbcType=VARCHAR}, #{channelId}, #{topicIds}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    insert into t_note
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="isContentEmpty != null">
+        is_content_empty,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="topicId != null">
+        topic_id,
+      </if>
+      <if test="topicName != null">
+        topic_name,
+      </if>
+      <if test="isTop != null">
+        is_top,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="imgUris != null">
+        img_uris,
+      </if>
+      <if test="videoUri != null">
+        video_uri,
+      </if>
+      <if test="visible != null">
+        visible,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="contentUuid != null">
+        content_uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="isContentEmpty != null">
+        #{isContentEmpty,jdbcType=BIT},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="topicId != null">
+        #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="topicName != null">
+        #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop != null">
+        #{isTop,jdbcType=BIT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="imgUris != null">
+        #{imgUris,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUri != null">
+        #{videoUri,jdbcType=VARCHAR},
+      </if>
+      <if test="visible != null">
+        #{visible,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="contentUuid != null">
+        #{contentUuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    update t_note
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="isContentEmpty != null">
+        is_content_empty = #{isContentEmpty,jdbcType=BIT},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="topicId != null">
+        topic_id = #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="topicName != null">
+        topic_name = #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop != null">
+        is_top = #{isTop,jdbcType=BIT},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="imgUris != null">
+        img_uris = #{imgUris,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUri != null">
+        video_uri = #{videoUri,jdbcType=VARCHAR},
+      </if>
+      <if test="visible != null">
+        visible = #{visible,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="contentUuid != null">
+        content_uuid = #{contentUuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    update t_note
+    set title = #{title,jdbcType=VARCHAR},
+      is_content_empty = #{isContentEmpty,jdbcType=BIT},
+      topic_id = #{topicId,jdbcType=BIGINT},
+      topic_name = #{topicName,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=TINYINT},
+      img_uris = #{imgUris,jdbcType=VARCHAR},
+      video_uri = #{videoUri,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateVisibleOnlyMe" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    update t_note
+    set visible = #{visible,jdbcType=TINYINT},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT} and `status` = 1
+  </update>
+
+  <update id="updateIsTop" parameterType="com.quanxiaoha.xiaohashu.note.biz.domain.dataobject.NoteDO">
+    update t_note
+    set is_top = #{isTop,jdbcType=BIT},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT} and creator_id = #{creatorId,jdbcType=BIGINT}
+  </update>
+
+
+
+</mapper>

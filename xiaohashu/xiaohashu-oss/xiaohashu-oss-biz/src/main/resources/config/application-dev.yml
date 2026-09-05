@@ -1,0 +1,14 @@
+#=================================================================
+# 对象存储配置
+#=================================================================
+storage:
+  minio:
+    endpoint: http://192.168.0.106:9000
+    domain: http://116.62.199.48:9001
+    accessKey: ${MINIO_ACCESS_KEY}
+    secretKey: ${MINIO_SECRET_KEY}
+  aliyun-oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    accessKey: ${ALIYUN_OSS_ACCESS_KEY}
+    secretKey: ${ALIYUN_OSS_SECRET_KEY}
+

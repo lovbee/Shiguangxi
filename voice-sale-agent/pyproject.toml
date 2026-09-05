@@ -1,0 +1,4 @@
+[tool.ruff.lint.per-file-ignores]
+"app/api/**/*.py" = ["B008"]
+"app/api/deps.py" = ["B008"]
+"app/repositories/session.py" = ["DTZ005"]
